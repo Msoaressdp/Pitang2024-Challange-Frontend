@@ -14,12 +14,13 @@ import {
 
 const Schedule = () => {
   const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState(null);
   const [scheduledDate, setScheduledDate] = useState(null);
   const [submittedData, setSubmittedData] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newAppointment = { name, scheduledDate };
+    const newAppointment = { name, birthDate, scheduledDate };
     setSubmittedData(newAppointment);
     setName('');
     setScheduledDate(null);
@@ -36,6 +37,17 @@ const Schedule = () => {
               id="name" 
               value={name} 
               onChange={(e) => setName(e.target.value)} 
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="birthDate">Data de Nascimento:</FormLabel>
+            <DatePicker
+              id="birthDate"
+              selected={birthDate}
+              onChange={(date) => setBirthDate(date)}
+              dateFormat="dd/MM/yyyy"
+              maxDate={new Date()}
             />
           </FormControl>
 
@@ -64,6 +76,7 @@ const Schedule = () => {
         <Box mt={4} p={4} borderWidth="1px" borderRadius="lg">
            <Heading as="h2" size="md">Submitted Data</Heading>
           <Text><strong>Nome:</strong> {submittedData.name}</Text>
+          <Text><strong>Data de Nascimento:</strong> {submittedData.birthDate ? submittedData.birthDate.toString() : ''}</Text>
           <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? submittedData.scheduledDate.toString() : ''}</Text>
         </Box>
       )}
