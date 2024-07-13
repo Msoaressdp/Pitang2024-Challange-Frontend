@@ -24,6 +24,7 @@ const Schedule = () => {
     setSubmittedData(newAppointment);
     setName('');
     setScheduledDate(null);
+    setBirthDate(null);
   };
 
   return (
