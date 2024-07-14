@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -12,6 +12,16 @@ import { useModal } from '../context/ModalContext';
 
 const SubmissionModal = () => {
   const { isOpen, closeModal, message } = useModal();
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        closeModal();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, closeModal]);
 
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
