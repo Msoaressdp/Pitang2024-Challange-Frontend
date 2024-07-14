@@ -18,11 +18,12 @@ import {
 } from '@chakra-ui/react';
 
 const Schedule = () => {
-  const { name, setName, birthDate, setBirthDate, scheduledDate, setScheduledDate, resetForm } = useFormState();
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const { register, handleSubmit, control, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(appointmentSchema),
     mode: 'onBlur',
   });
+
+  const { name, setName, birthDate, setBirthDate, scheduledDate, setScheduledDate, resetForm } = useFormState(setValue);
 
   const { showModal } = useModal();
   const [submittedData, setSubmittedData] = React.useState(null);
