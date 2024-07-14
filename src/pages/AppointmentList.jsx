@@ -4,7 +4,8 @@ import {
     Box, 
     Heading, 
     VStack, 
-    Text 
+    Text, 
+    Checkbox 
 } from '@chakra-ui/react';
 
 const AppointmentList = () => {
@@ -20,6 +21,16 @@ const AppointmentList = () => {
       setAppointments(response.data.items);
     } catch (error) {
       console.error('Erro ao buscar agendamentos:', error);
+    }
+  };
+
+  const handleCheckboxChange = async (id, currentSituation) => {
+    const newSituation = currentSituation === 'Undone' ? 'Done' : 'Undone';
+    try {
+      await api.put(`/api/appointment/:${id}`, { situation: newSituation });
+      listAppointments();
+    } catch (error) {
+      console.error('Erro ao atualizar a situação:', error);
     }
   };
 
@@ -60,7 +71,12 @@ const AppointmentList = () => {
                 <Text><strong>Nome:</strong> {appointment.name}</Text>
                 <Text><strong>Data de Nascimento:</strong> {new Date(appointment.birthDate).toLocaleDateString()}</Text>
                 <Text><strong>Data e Hora do Agendamento:</strong> {new Date(appointment.scheduledDate).toLocaleString()}</Text>
-                <Text><strong>Situação:</strong> {appointment.situation}</Text>
+                <Checkbox 
+                  isChecked={appointment.situation === 'Done'} 
+                  onChange={() => handleCheckboxChange(appointment.id, appointment.situation)}
+                >
+                  {appointment.situation === 'Done' ? 'Concluído' : 'Não Concluído'}
+                </Checkbox>
                 <Text><strong>Descrição:</strong> {appointment.desc}</Text>
               </Box>
             ))}
