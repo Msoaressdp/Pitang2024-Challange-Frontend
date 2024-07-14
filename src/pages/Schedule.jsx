@@ -36,7 +36,8 @@ const Schedule = () => {
       resetForm();
       showModal('Agendamento criado com sucesso');
     } catch (error) {
-      console.error('Erro ao criar agendamento:', error);
+      const errorMessage = error?.response?.data?.message ?? 'Erro ao criar agendamento';
+      showModal(errorMessage);
     }
   }
 

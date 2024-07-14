@@ -27,7 +27,7 @@ const SubmissionModal = () => {
     <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Agendamento</ModalHeader>
+        <ModalHeader>Notification</ModalHeader>
         <ModalBody>
           {message}
         </ModalBody>
