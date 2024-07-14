@@ -1,11 +1,11 @@
 import React from 'react';
 import { ModalProvider } from './ModalContext';
-import Schedule from '../pages/Schedule';
+import AppRoutes from '../routes';
 
 const App = () => {
   return (
     <ModalProvider>
-      <Schedule />
+      <AppRoutes />
     </ModalProvider>
   );
 };
