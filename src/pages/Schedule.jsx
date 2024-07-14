@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import DatePickerField from '../components/DatePickerField';
 import useFormState from '../hooks/useFormState';
+import { appointmentSchema } from '../schema/appointmentSchema';
 import 'react-datepicker/dist/react-datepicker.css';
 import { 
   Button,
@@ -18,12 +19,6 @@ import {
 
 import { useModal } from '../context/ModalContext';
 import SubmissionModal from '../components/ModalComponent';
-
-const appointmentSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório'),
-  birthDate: z.date({ required_error: 'Data de Nascimento é obrigatória' }),
-  scheduledDate: z.date({ required_error: 'Data e Hora do Agendamento são obrigatórias' }),
-});
 
 const Schedule = () => {
 
