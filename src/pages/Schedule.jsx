@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import DatePicker from 'react-datepicker';
+import DatePickerField from '../components/DatePickerField';
 import 'react-datepicker/dist/react-datepicker.css';
 import { 
   Button,
@@ -61,53 +61,33 @@ const Schedule = () => {
             {errors.name && <Text color="red.500">{errors.name.message}</Text>}
           </FormControl>
 
-          <FormControl isInvalid={errors.birthDate}>
-            <FormLabel htmlFor="birthDate">Data de Nascimento:</FormLabel>
-            <Controller
-              control={control}
-              name="birthDate"
-              render={({ field }) => (
-                <DatePicker
-                  id="birthDate"
-                  selected={birthDate}
-                  onChange={(date) => {
-                    setBirthDate(date);
-                    field.onChange(date);
-                  }}
-                  dateFormat="dd/MM/yyyy"
-                  maxDate={new Date()}
-                />
-              )}
-            />
-            {errors.birthDate && <Text color="red.500">{errors.birthDate.message}</Text>}
-          </FormControl>
+          <DatePickerField
+            control={control}
+            name="birthDate"
+            label="Data de Nascimento"
+            errors={errors}
+            selected={birthDate}
+            onChange={(date) => setBirthDate(date)}
+            dateFormat="dd/MM/yyyy"
+            maxDate={new Date()}
+          />
 
-          <FormControl isInvalid={errors.scheduledDate}>
-            <FormLabel htmlFor="appointmentDate">Data e Hora do Agendamento:</FormLabel>
-            <Controller
-              control={control}
-              name="scheduledDate"
-              render={({ field }) => (
-                <DatePicker
-                  id="appointmentDate"
-                  selected={scheduledDate}
-                  onChange={(date) => {
-                    setScheduledDate(date);
-                    field.onChange(date);
-                  }}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={60}
-                  timeCaption="Hora"
-                  dateFormat="dd/MM/yyyy HH:mm"
-                  minDate={new Date()}
-                  minTime={new Date(new Date().setHours(11, 0, 0, 0))}
-                  maxTime={new Date(new Date().setHours(20, 0))}
-                />
-              )}
-            />
-            {errors.scheduledDate && <Text color="red.500">{errors.scheduledDate.message}</Text>}
-          </FormControl>
+          <DatePickerField
+            control={control}
+            name="scheduledDate"
+            label="Data e Hora do Agendamento"
+            errors={errors}
+            selected={scheduledDate}
+            onChange={(date) => setScheduledDate(date)}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={60}
+            timeCaption="Hora"
+            dateFormat="dd/MM/yyyy HH:mm"
+            minDate={new Date()}
+            minTime={new Date(new Date().setHours(11, 0, 0, 0))}
+            maxTime={new Date(new Date().setHours(20, 0))}
+          />
 
           <Button mt={4} colorScheme="teal" type="submit">Submit</Button>
         </VStack>
