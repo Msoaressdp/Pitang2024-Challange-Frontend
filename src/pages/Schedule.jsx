@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import DatePickerField from '../components/DatePickerField';
-import useFormState from '../hooks/useFormState';
+import { useModal } from '../context/ModalContext';
+import SubmissionModal from '../components/ModalComponent';
 import { appointmentSchema } from '../schema/appointmentSchema';
-import 'react-datepicker/dist/react-datepicker.css';
-import { 
+import useFormState from '../hooks/useFormState';
+import DatePickerField from '../components/DatePickerField';
+import {
   Button,
   FormControl,
   FormLabel,
@@ -14,23 +14,18 @@ import {
   Box,
   Heading,
   VStack,
-  Text,
+  Text
 } from '@chakra-ui/react';
 
-import { useModal } from '../context/ModalContext';
-import SubmissionModal from '../components/ModalComponent';
-
 const Schedule = () => {
-
   const { name, setName, birthDate, setBirthDate, scheduledDate, setScheduledDate, resetForm } = useFormState();
-  
   const { register, handleSubmit, control, formState: { errors } } = useForm({
     resolver: zodResolver(appointmentSchema),
-    mode: 'onBlur'
+    mode: 'onBlur',
   });
 
   const { showModal } = useModal();
-  const [submittedData, setSubmittedData] = useState(null);
+  const [submittedData, setSubmittedData] = React.useState(null);
 
   const onSubmit = (data) => {
     setSubmittedData(data);
@@ -57,10 +52,11 @@ const Schedule = () => {
           <DatePickerField
             control={control}
             name="birthDate"
-            label="Data de Nascimento"
-            errors={errors}
-            selected={birthDate}
-            onChange={(date) => setBirthDate(date)}
+            label="Data de Nascimento:"
+            selectedDate={birthDate}
+            setSelectedDate={setBirthDate}
+            isInvalid={!!errors.birthDate}
+            errors={errors.birthDate}
             dateFormat="dd/MM/yyyy"
             maxDate={new Date()}
           />
@@ -68,10 +64,11 @@ const Schedule = () => {
           <DatePickerField
             control={control}
             name="scheduledDate"
-            label="Data e Hora do Agendamento"
-            errors={errors}
-            selected={scheduledDate}
-            onChange={(date) => setScheduledDate(date)}
+            label="Data e Hora do Agendamento:"
+            selectedDate={scheduledDate}
+            setSelectedDate={setScheduledDate}
+            isInvalid={!!errors.scheduledDate}
+            errors={errors.scheduledDate}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={60}
