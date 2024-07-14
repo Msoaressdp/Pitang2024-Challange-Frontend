@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import DatePickerField from '../components/DatePickerField';
+import useFormState from '../hooks/useFormState';
 import 'react-datepicker/dist/react-datepicker.css';
 import { 
   Button,
@@ -25,9 +26,8 @@ const appointmentSchema = z.object({
 });
 
 const Schedule = () => {
-  const [name, setName] = useState('');
-  const [birthDate, setBirthDate] = useState(null);
-  const [scheduledDate, setScheduledDate] = useState(null);
+
+  const { name, setName, birthDate, setBirthDate, scheduledDate, setScheduledDate, resetForm } = useFormState();
   
   const { register, handleSubmit, control, formState: { errors } } = useForm({
     resolver: zodResolver(appointmentSchema),
@@ -39,9 +39,7 @@ const Schedule = () => {
 
   const onSubmit = (data) => {
     setSubmittedData(data);
-    setName('');
-    setBirthDate(null);
-    setScheduledDate(null);
+    resetForm();
     showModal('Agendamento criado com sucesso');
   };
 
