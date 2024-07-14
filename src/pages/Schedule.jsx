@@ -13,18 +13,22 @@ import {
   Heading,
   VStack,
   Text,
- } from '@chakra-ui/react';
+} from '@chakra-ui/react';
 
 import { useModal } from '../context/ModalContext';
 import SubmissionModal from '../components/ModalComponent';
 
 const appointmentSchema = z.object({
-name: z.string().min(1,'Nome é obrigatório'),
-birthDate: z.date({ required_error: 'Data de Nascimento é obrigatória' }),
-scheduledDate: z.date({ required_error: 'Data e Hora do Agendamento são obrigatórias' }),
+  name: z.string().min(1, 'Nome é obrigatório'),
+  birthDate: z.date({ required_error: 'Data de Nascimento é obrigatória' }),
+  scheduledDate: z.date({ required_error: 'Data e Hora do Agendamento são obrigatórias' }),
 });
 
 const Schedule = () => {
+  const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState(null);
+  const [scheduledDate, setScheduledDate] = useState(null);
+  
   const { register, handleSubmit, control, formState: { errors } } = useForm({
     resolver: zodResolver(appointmentSchema),
     mode: 'onBlur'
@@ -35,6 +39,9 @@ const Schedule = () => {
 
   const onSubmit = (data) => {
     setSubmittedData(data);
+    setName('');
+    setBirthDate(null);
+    setScheduledDate(null);
     showModal('Agendamento criado com sucesso');
   };
 
@@ -43,11 +50,13 @@ const Schedule = () => {
       <Heading mb={8} mt={10}>Agendamento</Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4} align="stretch">
-        <FormControl isInvalid={errors.name}>
+          <FormControl isInvalid={errors.name}>
             <FormLabel htmlFor="name">Nome:</FormLabel>
             <Input
               id="name"
               {...register('name')}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             {errors.name && <Text color="red.500">{errors.name.message}</Text>}
           </FormControl>
@@ -60,8 +69,11 @@ const Schedule = () => {
               render={({ field }) => (
                 <DatePicker
                   id="birthDate"
-                  selected={field.value}
-                  onChange={field.onChange}
+                  selected={birthDate}
+                  onChange={(date) => {
+                    setBirthDate(date);
+                    field.onChange(date);
+                  }}
                   dateFormat="dd/MM/yyyy"
                   maxDate={new Date()}
                 />
@@ -78,8 +90,11 @@ const Schedule = () => {
               render={({ field }) => (
                 <DatePicker
                   id="appointmentDate"
-                  selected={field.value}
-                  onChange={field.onChange}
+                  selected={scheduledDate}
+                  onChange={(date) => {
+                    setScheduledDate(date);
+                    field.onChange(date);
+                  }}
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={60}
@@ -91,7 +106,7 @@ const Schedule = () => {
                 />
               )}
             />
-             {errors.scheduledDate && <Text color="red.500">{errors.scheduledDate.message}</Text>}
+            {errors.scheduledDate && <Text color="red.500">{errors.scheduledDate.message}</Text>}
           </FormControl>
 
           <Button mt={4} colorScheme="teal" type="submit">Submit</Button>
@@ -100,7 +115,7 @@ const Schedule = () => {
 
       {submittedData && (
         <Box mt={4} p={4} borderWidth="1px" borderRadius="lg">
-           <Heading as="h2" size="md">Submitted Data</Heading>
+          <Heading as="h2" size="md">Submitted Data</Heading>
           <Text><strong>Nome:</strong> {submittedData.name}</Text>
           <Text><strong>Data de Nascimento:</strong> {submittedData.birthDate ? submittedData.birthDate.toLocaleDateString() : ''}</Text>
           <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? submittedData.scheduledDate.toLocaleString() : ''}</Text>
