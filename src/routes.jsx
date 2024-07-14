@@ -1,11 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import Schedule from './pages/Schedule';
+import AppointmentList from './pages/AppointmentList';
 
 const AppRoutes = () => (
   <BrowserRouter>
     <Routes>
-      <Route element={<Schedule />} path='/Schedule' />
+      <Route path="/" element={<Navigate to="/schedule" />} />
+        <Route element={<Schedule />} path='/schedule' />
+        <Route element={<AppointmentList />} path='/list' />
     </Routes>
   </BrowserRouter>
 );
