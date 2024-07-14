@@ -27,8 +27,12 @@ const AppointmentList = () => {
   const handleCheckboxChange = async (id, currentSituation) => {
     const newSituation = currentSituation === 'Undone' ? 'Done' : 'Undone';
     try {
-      await api.put(`/api/appointment/:${id}`, { situation: newSituation });
-      listAppointments();
+      await api.put(`/api/appointment/${id}`, { situation: newSituation });
+      setAppointments(prevAppointments => 
+        prevAppointments.map(appointment =>
+          appointment.id === id ? { ...appointment, situation: newSituation } : appointment
+        )
+      );
     } catch (error) {
       console.error('Erro ao atualizar a situação:', error);
     }
