@@ -1,6 +1,6 @@
 import React from 'react';
-import { ModalProvider } from './context/ModalContext';
-import Schedule from './pages/Schedule';
+import { ModalProvider } from './ModalContext';
+import Schedule from '../pages/Schedule';
 
 const App = () => {
   return (
