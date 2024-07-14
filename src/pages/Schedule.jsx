@@ -6,6 +6,7 @@ import SubmissionModal from '../components/ModalComponent';
 import { appointmentSchema } from '../schema/appointmentSchema';
 import useFormState from '../hooks/useFormState';
 import DatePickerField from '../components/DatePickerField';
+import api from '../services/api';
 import {
   Button,
   FormControl,
@@ -28,15 +29,20 @@ const Schedule = () => {
   const { showModal } = useModal();
   const [submittedData, setSubmittedData] = React.useState(null);
 
-  const onSubmit = (data) => {
-    setSubmittedData(data);
-    resetForm();
-    showModal('Agendamento criado com sucesso');
-  };
+  const onSubmit = async (data) => {
+    try {
+      const response = await api.post('/api/appointment', data);
+      setSubmittedData(response.data);
+      resetForm();
+      showModal('Agendamento criado com sucesso');
+    } catch (error) {
+      console.error('Erro ao criar agendamento:', error);
+    }
+  }
 
   return (
     <Box maxW="720px" mx="auto" mt={40} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
-      <Heading mb={8} mt={10}>Agendamento</Heading>
+      <Heading mb={8} mt={10}>Agendamento de Vacinas Covid-19</Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4} align="stretch">
           <FormControl isInvalid={errors.name}>
@@ -88,8 +94,8 @@ const Schedule = () => {
         <Box mt={4} p={4} borderWidth="1px" borderRadius="lg">
           <Heading as="h2" size="md">Submitted Data</Heading>
           <Text><strong>Nome:</strong> {submittedData.name}</Text>
-          <Text><strong>Data de Nascimento:</strong> {submittedData.birthDate ? submittedData.birthDate.toLocaleDateString() : ''}</Text>
-          <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? submittedData.scheduledDate.toLocaleString() : ''}</Text>
+          <Text><strong>Data de Nascimento:</strong> {submittedData.birthDate ? new Date(submittedData.birthDate).toLocaleDateString() : ''}</Text>
+          <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? new Date(submittedData.scheduledDate).toLocaleString() : ''}</Text>
         </Box>
       )}
       <SubmissionModal />
