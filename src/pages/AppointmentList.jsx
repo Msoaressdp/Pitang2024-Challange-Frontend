@@ -16,7 +16,7 @@ const AppointmentList = () => {
 
   const listAppointments = async () => {
     try {
-      const response = await api.get('/api/appointments');
+      const response = await api.get('/api/appointment');
       setAppointments(response.data.items);
     } catch (error) {
       console.error('Erro ao buscar agendamentos:', error);
@@ -26,28 +26,36 @@ const AppointmentList = () => {
   const groupBy = (appointments) => {
     const grouped = {};
     appointments.forEach(appointment => {
-      const date = new Date(appointment.scheduledDate).toLocaleDateString();
-      const hour = new Date(appointment.scheduledDate).getHours();
-      const key = `${date} ${hour}:00`;
-      if (!grouped[key]) {
-        grouped[key] = [];
+      const date = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
+  
+      if (!grouped[date]) {
+        grouped[date] = [];
       }
-      grouped[key].push(appointment);
+      grouped[date].push(appointment);
     });
-    return grouped;
+  
+    for (const date in grouped) {
+      grouped[date].sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate));
+    }
+  
+    return Object.keys(grouped)
+      .sort((a, b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')))
+      .reduce((sortedGrouped, date) => {
+        sortedGrouped[date] = grouped[date];
+        return sortedGrouped;
+      }, {});
   };
-
+  
   const groupedAppointments = groupBy(appointments);
-
-
+  
   return (
     <Box maxW="720px" mx="auto" mt={40} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
       <Heading mb={8} mt={10}>Lista de Agendamentos</Heading>
-      {Object.entries(groupedAppointments).map(([dateHour, groupedAppointments]) => (
-        <Box key={dateHour} mt={4} p={4} borderWidth="1px" borderRadius="lg">
-          <Heading as="h3" size="md">{dateHour}</Heading>
+      {Object.entries(groupedAppointments).map(([date, appointments]) => (
+        <Box key={date} mt={4} p={4} borderWidth="1px" borderRadius="lg">
+          <Heading as="h3" size="md">{date}</Heading>
           <VStack spacing={4} align="stretch">
-            {groupedAppointments.map(appointment => (
+            {appointments.map(appointment => (
               <Box key={appointment.id} p={4} borderWidth="1px" borderRadius="lg">
                 <Text><strong>Nome:</strong> {appointment.name}</Text>
                 <Text><strong>Data de Nascimento:</strong> {new Date(appointment.birthDate).toLocaleDateString()}</Text>
@@ -60,7 +68,7 @@ const AppointmentList = () => {
         </Box>
       ))}
     </Box>
-  );
-};
+  );  
+}
 
 export default AppointmentList;
