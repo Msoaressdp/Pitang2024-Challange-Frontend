@@ -1,3 +1,13 @@
-export default function App() {
-  return <div> <h1>Hello World</h1> </div>
-}
+import React from 'react';
+import { ModalProvider } from './context/ModalContext';
+import Schedule from './pages/Schedule';
+
+const App = () => {
+  return (
+    <ModalProvider>
+      <Schedule />
+    </ModalProvider>
+  );
+};
+
+export default App;

@@ -15,6 +15,9 @@ import {
   Text,
  } from '@chakra-ui/react';
 
+import { useModal } from '../context/ModalContext';
+import SubmissionModal from '../components/ModalComponent';
+
 const appointmentSchema = z.object({
 name: z.string().min(1,'Nome é obrigatório'),
 birthDate: z.date({ required_error: 'Data de Nascimento é obrigatória' }),
@@ -27,10 +30,12 @@ const Schedule = () => {
     mode: 'onBlur'
   });
 
+  const { showModal } = useModal();
   const [submittedData, setSubmittedData] = useState(null);
 
   const onSubmit = (data) => {
     setSubmittedData(data);
+    showModal('Agendamento criado com sucesso');
   };
 
   return (
@@ -101,6 +106,7 @@ const Schedule = () => {
           <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? submittedData.scheduledDate.toLocaleString() : ''}</Text>
         </Box>
       )}
+      <SubmissionModal />
     </Box>
   );
 };
