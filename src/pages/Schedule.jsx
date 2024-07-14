@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { 
+import { useModal } from '../context/ModalContext';
+import SubmissionModal from '../components/ModalComponent';
+import { appointmentSchema } from '../schema/appointmentSchema';
+import useFormState from '../hooks/useFormState';
+import DatePickerField from '../components/DatePickerField';
+import {
   Button,
   FormControl,
   FormLabel,
@@ -12,29 +14,23 @@ import {
   Box,
   Heading,
   VStack,
-  Text,
- } from '@chakra-ui/react';
-
-import { useModal } from '../context/ModalContext';
-import SubmissionModal from '../components/ModalComponent';
-
-const appointmentSchema = z.object({
-name: z.string().min(1,'Nome é obrigatório'),
-birthDate: z.date({ required_error: 'Data de Nascimento é obrigatória' }),
-scheduledDate: z.date({ required_error: 'Data e Hora do Agendamento são obrigatórias' }),
-});
+  Text
+} from '@chakra-ui/react';
 
 const Schedule = () => {
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const { register, handleSubmit, control, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(appointmentSchema),
-    mode: 'onBlur'
+    mode: 'onBlur',
   });
 
+  const { name, setName, birthDate, setBirthDate, scheduledDate, setScheduledDate, resetForm } = useFormState(setValue);
+
   const { showModal } = useModal();
-  const [submittedData, setSubmittedData] = useState(null);
+  const [submittedData, setSubmittedData] = React.useState(null);
 
   const onSubmit = (data) => {
     setSubmittedData(data);
+    resetForm();
     showModal('Agendamento criado com sucesso');
   };
 
@@ -43,56 +39,46 @@ const Schedule = () => {
       <Heading mb={8} mt={10}>Agendamento</Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4} align="stretch">
-        <FormControl isInvalid={errors.name}>
+          <FormControl isInvalid={errors.name}>
             <FormLabel htmlFor="name">Nome:</FormLabel>
             <Input
               id="name"
               {...register('name')}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             {errors.name && <Text color="red.500">{errors.name.message}</Text>}
           </FormControl>
 
-          <FormControl isInvalid={errors.birthDate}>
-            <FormLabel htmlFor="birthDate">Data de Nascimento:</FormLabel>
-            <Controller
-              control={control}
-              name="birthDate"
-              render={({ field }) => (
-                <DatePicker
-                  id="birthDate"
-                  selected={field.value}
-                  onChange={field.onChange}
-                  dateFormat="dd/MM/yyyy"
-                  maxDate={new Date()}
-                />
-              )}
-            />
-            {errors.birthDate && <Text color="red.500">{errors.birthDate.message}</Text>}
-          </FormControl>
+          <DatePickerField
+            control={control}
+            name="birthDate"
+            label="Data de Nascimento:"
+            selectedDate={birthDate}
+            setSelectedDate={setBirthDate}
+            isInvalid={!!errors.birthDate}
+            errors={errors.birthDate}
+            dateFormat="dd/MM/yyyy"
+            maxDate={new Date()}
+          />
 
-          <FormControl isInvalid={errors.scheduledDate}>
-            <FormLabel htmlFor="appointmentDate">Data e Hora do Agendamento:</FormLabel>
-            <Controller
-              control={control}
-              name="scheduledDate"
-              render={({ field }) => (
-                <DatePicker
-                  id="appointmentDate"
-                  selected={field.value}
-                  onChange={field.onChange}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={60}
-                  timeCaption="Hora"
-                  dateFormat="dd/MM/yyyy HH:mm"
-                  minDate={new Date()}
-                  minTime={new Date(new Date().setHours(11, 0, 0, 0))}
-                  maxTime={new Date(new Date().setHours(20, 0))}
-                />
-              )}
-            />
-             {errors.scheduledDate && <Text color="red.500">{errors.scheduledDate.message}</Text>}
-          </FormControl>
+          <DatePickerField
+            control={control}
+            name="scheduledDate"
+            label="Data e Hora do Agendamento:"
+            selectedDate={scheduledDate}
+            setSelectedDate={setScheduledDate}
+            isInvalid={!!errors.scheduledDate}
+            errors={errors.scheduledDate}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={60}
+            timeCaption="Hora"
+            dateFormat="dd/MM/yyyy HH:mm"
+            minDate={new Date()}
+            minTime={new Date(new Date().setHours(11, 0, 0, 0))}
+            maxTime={new Date(new Date().setHours(20, 0))}
+          />
 
           <Button mt={4} colorScheme="teal" type="submit">Submit</Button>
         </VStack>
@@ -100,7 +86,7 @@ const Schedule = () => {
 
       {submittedData && (
         <Box mt={4} p={4} borderWidth="1px" borderRadius="lg">
-           <Heading as="h2" size="md">Submitted Data</Heading>
+          <Heading as="h2" size="md">Submitted Data</Heading>
           <Text><strong>Nome:</strong> {submittedData.name}</Text>
           <Text><strong>Data de Nascimento:</strong> {submittedData.birthDate ? submittedData.birthDate.toLocaleDateString() : ''}</Text>
           <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? submittedData.scheduledDate.toLocaleString() : ''}</Text>
