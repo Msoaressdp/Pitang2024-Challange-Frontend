@@ -21,4 +21,8 @@ export const deleteAppointment = async (id) => {
   await api.delete(`/api/appointment/${id}`);
 };
 
+export const storeAppointment = async (data) => {
+  return await api.post('/api/appointment', data);
+};
+
 export default api;

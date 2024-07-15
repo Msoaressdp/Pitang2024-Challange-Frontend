@@ -6,7 +6,7 @@ import SubmissionModal from '../components/ModalComponent';
 import { appointmentSchema } from '../schema/appointmentSchema';
 import useFormState from '../hooks/useFormState';
 import DatePickerField from '../components/DatePickerField';
-import api from '../services/api';
+import { storeAppointment } from '../services/api';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -32,7 +32,7 @@ const Schedule = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await api.post('/api/appointment', data);
+      const response = await storeAppointment(data);
       setSubmittedData(response.data);
       resetForm();
       showModal('Agendamento criado com sucesso');
@@ -40,7 +40,7 @@ const Schedule = () => {
       const errorMessage = error?.response?.data?.message ?? 'Erro ao criar agendamento';
       showModal(errorMessage);
     }
-  }
+  };
 
   return (
     <Box maxW="720px" mx="auto" mt={40} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
