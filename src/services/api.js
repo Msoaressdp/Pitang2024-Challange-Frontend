@@ -17,4 +17,8 @@ export const updateAppointmentConclusion = async (id, situation, conclusion) => 
   await api.put(`/api/appointment/${id}`, { situation, conclusion });
 };
 
+export const deleteAppointment = async (id) => {
+  await axios.delete(`/api/appointment/${id}`);
+};
+
 export default api;
