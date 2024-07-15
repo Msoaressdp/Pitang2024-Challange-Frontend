@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import api from '../services/api';
 import { 
     Box, 
     Heading, 
@@ -9,6 +8,7 @@ import {
     Button, 
     Input 
 } from '@chakra-ui/react';
+import { getAppointments, updateAppointmentSituation, updateAppointmentConclusion } from '../services/api';
 
 const AppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
@@ -21,8 +21,8 @@ const AppointmentList = () => {
 
   const listAppointments = async () => {
     try {
-      const response = await api.get('/api/appointment');
-      setAppointments(response.data.items);
+      const items = await getAppointments();
+      setAppointments(items);
     } catch (error) {
       console.error('Erro ao buscar agendamentos:', error);
     }
@@ -31,10 +31,7 @@ const AppointmentList = () => {
   const handleCheckboxChange = async (id, currentSituation) => {
     const newSituation = currentSituation === 'Undone' ? 'Done' : 'Undone';
     try {
-      await api.put(`/api/appointment/${id}`, { 
-        situation: newSituation,
-        conclusion: editedConclusion[id] || '' 
-      });
+      await updateAppointmentSituation(id, newSituation, editedConclusion[id] || '');
       setAppointments(prevAppointments => 
         prevAppointments.map(appointment =>
           appointment.id === id ? { ...appointment, situation: newSituation } : appointment
@@ -59,10 +56,7 @@ const AppointmentList = () => {
   const handleSaveClick = async (id) => {
     const appointmentToUpdate = appointments.find(appointment => appointment.id === id);
     try {
-      await api.put(`/api/appointment/${id}`, { 
-        situation: appointmentToUpdate.situation,
-        conclusion: editedConclusion[id]
-      });
+      await updateAppointmentConclusion(id, appointmentToUpdate.situation, editedConclusion[id]);
       setAppointments(prevAppointments =>
         prevAppointments.map(appointment =>
           appointment.id === id ? { ...appointment, conclusion: editedConclusion[id] } : appointment
