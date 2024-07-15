@@ -18,7 +18,7 @@ export const updateAppointmentConclusion = async (id, situation, conclusion) => 
 };
 
 export const deleteAppointment = async (id) => {
-  await axios.delete(`/api/appointment/${id}`);
+  await api.delete(`/api/appointment/${id}`);
 };
 
 export default api;
