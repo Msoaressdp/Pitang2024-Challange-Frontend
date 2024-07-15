@@ -1,7 +1,16 @@
 import React from 'react';
 import { Box, Text, Checkbox, Button, Input } from '@chakra-ui/react';
 
-const AppointmentItem = ({ appointment, editMode, editedConclusion, onCheckboxChange, onEditClick, onSaveClick, onConclusionChange }) => (
+const AppointmentItem = ({ 
+  appointment, 
+  editMode, 
+  editedConclusion, 
+  onCheckboxChange, 
+  onEditClick, 
+  onSaveClick, 
+  onConclusionChange, 
+  onDeleteClick 
+}) => (
   <Box p={4} borderWidth="1px" borderRadius="lg">
     <Text><strong>Nome:</strong> {appointment.name}</Text>
     <Text><strong>Data de Nascimento:</strong> {new Date(appointment.birthDate).toLocaleDateString()}</Text>
@@ -30,6 +39,9 @@ const AppointmentItem = ({ appointment, editMode, editedConclusion, onCheckboxCh
         )}
       </>
     )}
+    <Button onClick={() => onDeleteClick(appointment.id)} ml={2} colorScheme="red">
+      Delete
+    </Button>
   </Box>
 );
 

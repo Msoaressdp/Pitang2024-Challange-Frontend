@@ -13,6 +13,7 @@ const AppointmentList = () => {
     handleEditClick,
     handleSaveClick,
     handleConclusionChange,
+    handleDeleteClick,
     groupBy
   } = useListState();
 
@@ -35,6 +36,7 @@ const AppointmentList = () => {
           onEditClick={handleEditClick}
           onSaveClick={handleSaveClick}
           onConclusionChange={handleConclusionChange}
+          onDeleteClick={handleDeleteClick}
         />
       ))}
     </Box>

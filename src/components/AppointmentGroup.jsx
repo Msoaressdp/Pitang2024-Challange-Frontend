@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Heading, VStack } from '@chakra-ui/react';
 import AppointmentItem from './AppointmentItem';
 
-const AppointmentGroup = ({ date, appointments, editMode, editedConclusion, onCheckboxChange, onEditClick, onSaveClick, onConclusionChange }) => (
+const AppointmentGroup = ({ date, appointments, editMode, editedConclusion, onCheckboxChange, onEditClick, onSaveClick, onConclusionChange, onDeleteClick }) => (
   <Box mt={4} p={4} borderWidth="1px" borderRadius="lg">
     <Heading as="h3" size="md">{date}</Heading>
     <VStack spacing={4} align="stretch">
@@ -16,6 +16,7 @@ const AppointmentGroup = ({ date, appointments, editMode, editedConclusion, onCh
           onEditClick={onEditClick}
           onSaveClick={onSaveClick}
           onConclusionChange={onConclusionChange}
+          onDeleteClick={onDeleteClick}
         />
       ))}
     </VStack>
