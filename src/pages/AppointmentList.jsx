@@ -5,11 +5,15 @@ import {
     Heading, 
     VStack, 
     Text, 
-    Checkbox 
+    Checkbox, 
+    Button, 
+    Input 
 } from '@chakra-ui/react';
 
 const AppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
+  const [editMode, setEditMode] = useState({});
+  const [editedDescription, setEditedDescription] = useState({});
 
   useEffect(() => {
     listAppointments();
@@ -36,6 +40,41 @@ const AppointmentList = () => {
     } catch (error) {
       console.error('Erro ao atualizar a situação:', error);
     }
+  };
+
+  const handleEditClick = (id) => {
+    setEditMode(prevEditMode => ({
+      ...prevEditMode,
+      [id]: true
+    }));
+    setEditedDescription(prevEditedDescription => ({
+      ...prevEditedDescription,
+      [id]: appointments.find(appointment => appointment.id === id).conclusion
+    }));
+  };
+
+  const handleSaveClick = async (id) => {
+    try {
+      await api.put(`/api/appointment/${id}`, { conclusion: editedDescription[id] });
+      setAppointments(prevAppointments =>
+        prevAppointments.map(appointment =>
+          appointment.id === id ? { ...appointment, conclusion: editedDescription[id] } : appointment
+        )
+      );
+      setEditMode(prevEditMode => ({
+        ...prevEditMode,
+        [id]: false
+      }));
+    } catch (error) {
+      console.error('Erro ao salvar a conclusão:', error);
+    }
+  };
+
+  const handleDescriptionChange = (id, value) => {
+    setEditedDescription(prevEditedDescription => ({
+      ...prevEditedDescription,
+      [id]: value
+    }));
   };
 
   const groupBy = (appointments) => {
@@ -81,7 +120,20 @@ const AppointmentList = () => {
                 >
                   {appointment.situation === 'Done' ? 'Concluído' : 'Não Concluído'}
                 </Checkbox>
-                <Text><strong>Descrição:</strong> {appointment.desc}</Text>
+                <Text><strong>Conclusão:</strong></Text>
+                {editMode[appointment.id] ? (
+                  <Input
+                    value={editedDescription[appointment.id] || ''}
+                    onChange={(e) => handleDescriptionChange(appointment.id, e.target.value)}
+                  />
+                ) : (
+                  <Text>{appointment.conclusion}</Text>
+                )}
+                {editMode[appointment.id] ? (
+                  <Button onClick={() => handleSaveClick(appointment.id)}>Salvar</Button>
+                ) : (
+                  <Button onClick={() => handleEditClick(appointment.id)}>Editar</Button>
+                )}
               </Box>
             ))}
           </VStack>
