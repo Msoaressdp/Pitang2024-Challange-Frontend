@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { 
-    Box, 
-    Heading, 
-    VStack, 
-    Text, 
-    Checkbox, 
-    Button, 
-    Input 
-} from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import { getAppointments, updateAppointmentSituation, updateAppointmentConclusion } from '../services/api';
+import AppointmentGroup from '../components/AppointmentGroup';
 
 const AppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
@@ -32,120 +25,75 @@ const AppointmentList = () => {
     const newSituation = currentSituation === 'Undone' ? 'Done' : 'Undone';
     try {
       await updateAppointmentSituation(id, newSituation, editedConclusion[id] || '');
-      setAppointments(prevAppointments => 
-        prevAppointments.map(appointment =>
-          appointment.id === id ? { ...appointment, situation: newSituation } : appointment
-        )
-      );
+      updateLocalAppointments(id, { situation: newSituation });
     } catch (error) {
       console.error('Erro ao atualizar a situação:', error);
     }
   };
 
   const handleEditClick = (id) => {
-    setEditMode(prevEditMode => ({
-      ...prevEditMode,
-      [id]: true
-    }));
-    setEditedConclusion(prevEditedConclusion => ({
-      ...prevEditedConclusion,
+    setEditMode(prev => ({ ...prev, [id]: true }));
+    setEditedConclusion(prev => ({
+      ...prev,
       [id]: appointments.find(appointment => appointment.id === id).conclusion
     }));
   };
 
   const handleSaveClick = async (id) => {
-    const appointmentToUpdate = appointments.find(appointment => appointment.id === id);
     try {
-      await updateAppointmentConclusion(id, appointmentToUpdate.situation, editedConclusion[id]);
-      setAppointments(prevAppointments =>
-        prevAppointments.map(appointment =>
-          appointment.id === id ? { ...appointment, conclusion: editedConclusion[id] } : appointment
-        )
-      );
-      setEditMode(prevEditMode => ({
-        ...prevEditMode,
-        [id]: false
-      }));
+      await updateAppointmentConclusion(id, appointments.find(appt => appt.id === id).situation, editedConclusion[id]);
+      updateLocalAppointments(id, { conclusion: editedConclusion[id] });
+      setEditMode(prev => ({ ...prev, [id]: false }));
     } catch (error) {
       console.error('Erro ao salvar a conclusão', error);
     }
   };
 
   const handleConclusionChange = (id, value) => {
-    setEditedConclusion(prevEditedConclusion => ({
-      ...prevEditedConclusion,
-      [id]: value
-    }));
+    setEditedConclusion(prev => ({ ...prev, [id]: value }));
+  };
+
+  const updateLocalAppointments = (id, updatedFields) => {
+    setAppointments(prevAppointments => 
+      prevAppointments.map(appt => 
+        appt.id === id ? { ...appt, ...updatedFields } : appt
+      )
+    );
   };
 
   const groupBy = (appointments) => {
-    const grouped = {};
-    appointments.forEach(appointment => {
+    const grouped = appointments.reduce((acc, appointment) => {
       const date = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
-  
-      if (!grouped[date]) {
-        grouped[date] = [];
-      }
-      grouped[date].push(appointment);
-    });
-  
-    for (const date in grouped) {
-      grouped[date].sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate));
-    }
-  
+      if (!acc[date]) acc[date] = [];
+      acc[date].push(appointment);
+      return acc;
+    }, {});
+
     return Object.keys(grouped)
       .sort((a, b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')))
-      .reduce((sortedGrouped, date) => {
-        sortedGrouped[date] = grouped[date];
-        return sortedGrouped;
-      }, {});
+      .reduce((acc, date) => ({ ...acc, [date]: grouped[date].sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate)) }), {});
   };
-  
+
   const groupedAppointments = groupBy(appointments);
   
   return (
     <Box maxW="720px" mx="auto" mt={40} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
       <Heading mb={8} mt={10}>Lista de Agendamentos</Heading>
       {Object.entries(groupedAppointments).map(([date, appointments]) => (
-        <Box key={date} mt={4} p={4} borderWidth="1px" borderRadius="lg">
-          <Heading as="h3" size="md">{date}</Heading>
-          <VStack spacing={4} align="stretch">
-            {appointments.map(appointment => (
-              <Box key={appointment.id} p={4} borderWidth="1px" borderRadius="lg">
-                <Text><strong>Nome:</strong> {appointment.name}</Text>
-                <Text><strong>Data de Nascimento:</strong> {new Date(appointment.birthDate).toLocaleDateString()}</Text>
-                <Text><strong>Data e Hora do Agendamento:</strong> {new Date(appointment.scheduledDate).toLocaleString()}</Text>
-                <Checkbox 
-                  isChecked={appointment.situation === 'Done'} 
-                  onChange={() => handleCheckboxChange(appointment.id, appointment.situation)}
-                >
-                  {appointment.situation === 'Done' ? 'Concluído' : 'Não Concluído'}
-                </Checkbox>
-                {appointment.situation === 'Done' && (
-                  <>
-                    <Text><strong>Conclusão:</strong></Text>
-                    {editMode[appointment.id] ? (
-                      <Input
-                        value={editedConclusion[appointment.id] || ''}
-                        onChange={(e) => handleConclusionChange(appointment.id, e.target.value)}
-                      />
-                    ) : (
-                      <Text>{appointment.conclusion}</Text>
-                    )}
-                    {editMode[appointment.id] ? (
-                      <Button onClick={() => handleSaveClick(appointment.id)}>Salvar</Button>
-                    ) : (
-                      <Button onClick={() => handleEditClick(appointment.id)}>Editar</Button>
-                    )}
-                  </>
-                )}
-              </Box>
-            ))}
-          </VStack>
-        </Box>
+        <AppointmentGroup 
+          key={date}
+          date={date}
+          appointments={appointments}
+          editMode={editMode}
+          editedConclusion={editedConclusion}
+          onCheckboxChange={handleCheckboxChange}
+          onEditClick={handleEditClick}
+          onSaveClick={handleSaveClick}
+          onConclusionChange={handleConclusionChange}
+        />
       ))}
     </Box>
-  );  
-}
+  );
+};
 
 export default AppointmentList;
