@@ -7,6 +7,7 @@ import { appointmentSchema } from '../schema/appointmentSchema';
 import useFormState from '../hooks/useFormState';
 import DatePickerField from '../components/DatePickerField';
 import api from '../services/api';
+import { Link } from 'react-router-dom';
 import {
   Button,
   FormControl,
@@ -99,6 +100,13 @@ const Schedule = () => {
           <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? new Date(submittedData.scheduledDate).toLocaleString() : ''}</Text>
         </Box>
       )}
+
+      <Box mt={4}>
+        <Link to="/list">
+          <Button colorScheme="blue">Ver Agendamentos</Button>
+        </Link>
+      </Box>
+
       <SubmissionModal />
     </Box>
   );
