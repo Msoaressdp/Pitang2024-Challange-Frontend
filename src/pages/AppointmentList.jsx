@@ -127,19 +127,23 @@ const AppointmentList = () => {
                 >
                   {appointment.situation === 'Done' ? 'Concluído' : 'Não Concluído'}
                 </Checkbox>
-                <Text><strong>Conclusão:</strong></Text>
-                {editMode[appointment.id] ? (
-                  <Input
-                    value={editedConclusion[appointment.id] || ''}
-                    onChange={(e) => handleConclusionChange(appointment.id, e.target.value)}
-                  />
-                ) : (
-                  <Text>{appointment.conclusion}</Text>
-                )}
-                {editMode[appointment.id] ? (
-                  <Button onClick={() => handleSaveClick(appointment.id)}>Salvar</Button>
-                ) : (
-                  <Button onClick={() => handleEditClick(appointment.id)}>Editar</Button>
+                {appointment.situation === 'Done' && (
+                  <>
+                    <Text><strong>Conclusão:</strong></Text>
+                    {editMode[appointment.id] ? (
+                      <Input
+                        value={editedConclusion[appointment.id] || ''}
+                        onChange={(e) => handleConclusionChange(appointment.id, e.target.value)}
+                      />
+                    ) : (
+                      <Text>{appointment.conclusion}</Text>
+                    )}
+                    {editMode[appointment.id] ? (
+                      <Button onClick={() => handleSaveClick(appointment.id)}>Salvar</Button>
+                    ) : (
+                      <Button onClick={() => handleEditClick(appointment.id)}>Editar</Button>
+                    )}
+                  </>
                 )}
               </Box>
             ))}
