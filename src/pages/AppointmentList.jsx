@@ -13,7 +13,7 @@ import {
 const AppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
   const [editMode, setEditMode] = useState({});
-  const [editedDescription, setEditedDescription] = useState({});
+  const [editedConclusion, setEditedConclusion] = useState({});
 
   useEffect(() => {
     listAppointments();
@@ -31,7 +31,10 @@ const AppointmentList = () => {
   const handleCheckboxChange = async (id, currentSituation) => {
     const newSituation = currentSituation === 'Undone' ? 'Done' : 'Undone';
     try {
-      await api.put(`/api/appointment/${id}`, { situation: newSituation });
+      await api.put(`/api/appointment/${id}`, { 
+        situation: newSituation,
+        conclusion: editedConclusion[id] || '' 
+      });
       setAppointments(prevAppointments => 
         prevAppointments.map(appointment =>
           appointment.id === id ? { ...appointment, situation: newSituation } : appointment
@@ -47,18 +50,22 @@ const AppointmentList = () => {
       ...prevEditMode,
       [id]: true
     }));
-    setEditedDescription(prevEditedDescription => ({
-      ...prevEditedDescription,
+    setEditedConclusion(prevEditedConclusion => ({
+      ...prevEditedConclusion,
       [id]: appointments.find(appointment => appointment.id === id).conclusion
     }));
   };
 
   const handleSaveClick = async (id) => {
+    const appointmentToUpdate = appointments.find(appointment => appointment.id === id);
     try {
-      await api.put(`/api/appointment/${id}`, { conclusion: editedDescription[id] });
+      await api.put(`/api/appointment/${id}`, { 
+        situation: appointmentToUpdate.situation,
+        conclusion: editedConclusion[id]
+      });
       setAppointments(prevAppointments =>
         prevAppointments.map(appointment =>
-          appointment.id === id ? { ...appointment, conclusion: editedDescription[id] } : appointment
+          appointment.id === id ? { ...appointment, conclusion: editedConclusion[id] } : appointment
         )
       );
       setEditMode(prevEditMode => ({
@@ -66,13 +73,13 @@ const AppointmentList = () => {
         [id]: false
       }));
     } catch (error) {
-      console.error('Erro ao salvar a conclusão:', error);
+      console.error('Erro ao salvar a conclusão', error);
     }
   };
 
-  const handleDescriptionChange = (id, value) => {
-    setEditedDescription(prevEditedDescription => ({
-      ...prevEditedDescription,
+  const handleConclusionChange = (id, value) => {
+    setEditedConclusion(prevEditedConclusion => ({
+      ...prevEditedConclusion,
       [id]: value
     }));
   };
@@ -123,8 +130,8 @@ const AppointmentList = () => {
                 <Text><strong>Conclusão:</strong></Text>
                 {editMode[appointment.id] ? (
                   <Input
-                    value={editedDescription[appointment.id] || ''}
-                    onChange={(e) => handleDescriptionChange(appointment.id, e.target.value)}
+                    value={editedConclusion[appointment.id] || ''}
+                    onChange={(e) => handleConclusionChange(appointment.id, e.target.value)}
                   />
                 ) : (
                   <Text>{appointment.conclusion}</Text>
