@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAppointments, updateAppointmentSituation, updateAppointmentConclusion } from '../services/api';
+import { getAppointments, updateAppointmentSituation, updateAppointmentConclusion, deleteAppointment } from '../services/api';
 
 const useListState = () => {
   const [appointments, setAppointments] = useState([]);
@@ -59,6 +59,15 @@ const useListState = () => {
     );
   };
 
+  const handleDeleteClick = async (id) => {
+    try {
+      await deleteAppointment(id);
+      setAppointments(prevAppointments => prevAppointments.filter(appt => appt.id !== id));
+    } catch (error) {
+      console.error('Erro ao deletar o agendamento:', error);
+    }
+  };
+
   const groupBy = (appointments) => {
     const grouped = appointments.reduce((acc, appointment) => {
       const date = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
@@ -80,6 +89,7 @@ const useListState = () => {
     handleEditClick,
     handleSaveClick,
     handleConclusionChange,
+    handleDeleteClick,
     groupBy
   };
 };
