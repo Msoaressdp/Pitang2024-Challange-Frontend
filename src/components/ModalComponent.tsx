@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useModal } from '../context/ModalContext';
 
-const SubmissionModal = () => {
+const SubmissionModal: React.FC = () => {
   const { isOpen, closeModal, message } = useModal();
 
   useEffect(() => {
