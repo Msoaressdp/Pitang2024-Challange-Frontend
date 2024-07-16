@@ -2,7 +2,7 @@ import React from 'react';
 import { ModalProvider } from './ModalContext';
 import AppRoutes from '../routes';
 
-const App = () => {
+const AppContext: React.FC = () => {
   return (
     <ModalProvider>
       <AppRoutes />
@@ -10,4 +10,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default AppContext;
