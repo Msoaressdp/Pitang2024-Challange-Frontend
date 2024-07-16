@@ -1,9 +1,6 @@
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useModal } from '../context/ModalContext';
 import SubmissionModal from '../components/ModalComponent';
-import { appointmentSchema } from '../schema/appointmentSchema';
 import useFormState from '../hooks/useFormState';
 import DatePickerField from '../components/DatePickerField';
 import { storeAppointment } from '../services/api';
@@ -20,12 +17,19 @@ import {
 } from '@chakra-ui/react';
 
 const Schedule = () => {
-  const { register, handleSubmit, control, formState: { errors }, setValue } = useForm({
-    resolver: zodResolver(appointmentSchema),
-    mode: 'onBlur',
-  });
-
-  const { name, setName, birthDate, setBirthDate, scheduledDate, setScheduledDate, resetForm } = useFormState(setValue);
+  const {
+    register,
+    handleSubmit,
+    control,
+    errors,
+    name,
+    setName,
+    birthDate,
+    setBirthDate,
+    scheduledDate,
+    setScheduledDate,
+    resetForm
+  } = useFormState();
 
   const { showModal } = useModal();
   const [submittedData, setSubmittedData] = React.useState(null);

@@ -37,6 +37,8 @@ export interface ModalContextProps {
   closeModal: () => void;
 }
 
+import { Control, FieldErrors, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
+
 export interface UseFormStateReturn {
   name: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
@@ -45,6 +47,10 @@ export interface UseFormStateReturn {
   scheduledDate: Date | null;
   setScheduledDate: React.Dispatch<React.SetStateAction<Date | null>>;
   resetForm: () => void;
+  register: UseFormRegister<any>;
+  handleSubmit: UseFormHandleSubmit<any>;  
+  control: Control<any>;  
+  errors: FieldErrors<any>;  
 }
 
 export interface EditMode {
