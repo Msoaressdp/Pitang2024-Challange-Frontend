@@ -46,3 +46,11 @@ export interface UseFormStateReturn {
   setScheduledDate: React.Dispatch<React.SetStateAction<Date | null>>;
   resetForm: () => void;
 }
+
+export interface EditMode {
+  [key: string]: boolean;
+}
+
+export interface EditedConclusion {
+  [key: string]: string;
+}
