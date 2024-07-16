@@ -1,11 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-interface ModalContextProps {
-  isOpen: boolean;
-  message: string;
-  showModal: (msg: string) => void;
-  closeModal: () => void;
-}
+import { ModalContextProps } from '../interfaces/index';
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 

@@ -1,27 +1,7 @@
 import React from 'react';
 import { Box, Heading, VStack } from '@chakra-ui/react';
 import AppointmentItem from './AppointmentItem';
-
-interface Appointment {
-  name: string;
-  birthDate: Date;
-  scheduledDate: Date;
-  id?: string;
-  situation: string;
-  conclusion?: string;
-}
-
-interface AppointmentGroupProps {
-  date: string;
-  appointments: Appointment[];
-  editMode: { [key: string]: boolean };
-  editedConclusion: { [key: string]: string };
-  onCheckboxChange: (id: string, situation: string) => void;
-  onEditClick: (id: string) => void;
-  onSaveClick: (id: string) => void;
-  onConclusionChange: (id: string, value: string) => void;
-  onDeleteClick: (id: string) => void;
-}
+import { AppointmentGroupProps } from '../interfaces/index';
 
 const AppointmentGroup: React.FC<AppointmentGroupProps> = ({
   date,

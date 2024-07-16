@@ -1,25 +1,6 @@
 import React from 'react';
 import { Box, Text, Checkbox, Button, Input } from '@chakra-ui/react';
-
-interface Appointment {
-  name: string;
-  birthDate: Date;
-  scheduledDate: Date;
-  id?: string;
-  situation: string;
-  conclusion?: string;
-}
-
-interface AppointmentItemProps {
-  appointment: Appointment;
-  editMode: boolean;
-  editedConclusion: string;
-  onCheckboxChange: (id: string, situation: string) => void;
-  onEditClick: (id: string) => void;
-  onSaveClick: (id: string) => void;
-  onConclusionChange: (id: string, value: string) => void;
-  onDeleteClick: (id: string) => void;
-}
+import { AppointmentItemProps } from '../interfaces/index';
 
 const AppointmentItem: React.FC<AppointmentItemProps> = ({
   appointment,
