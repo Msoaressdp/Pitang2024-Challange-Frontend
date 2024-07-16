@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { UseFormStateReturn } from '../interfaces/index';
 
-const useFormState = (setValue) => {
-  const [name, setName] = useState('');
-  const [birthDate, setBirthDate] = useState(null);
-  const [scheduledDate, setScheduledDate] = useState(null);
+const useFormState = (setValue: (field: string, value: any) => void): UseFormStateReturn => {
+  const [name, setName] = useState<string>('');
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
 
   const resetForm = () => {
     setName('');
