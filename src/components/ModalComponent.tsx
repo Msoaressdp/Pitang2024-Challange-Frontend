@@ -17,7 +17,7 @@ const SubmissionModal: React.FC = () => {
     if (isOpen) {
       const timer = setTimeout(() => {
         closeModal();
-      }, 3000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
