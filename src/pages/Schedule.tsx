@@ -86,8 +86,8 @@ const Schedule: React.FC = () => {
             timeCaption="Hora"
             dateFormat="dd/MM/yyyy HH:mm"
             minDate={new Date()}
-            minTime={new Date(new Date().setHours(11, 0, 0, 0))}
-            maxTime={new Date(new Date().setHours(20, 0))}
+            minTime={new Date(new Date().setHours(10, 0, 0, 0))}
+            maxTime={new Date(new Date().setHours(22, 0))}
           />
 
           <Button mt={4} colorScheme="teal" type="submit">Submit</Button>
