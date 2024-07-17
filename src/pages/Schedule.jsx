@@ -68,8 +68,6 @@ const Schedule = () => {
             label="Data de Nascimento:"
             selectedDate={birthDate}
             setSelectedDate={setBirthDate}
-            isInvalid={!!errors.birthDate}
-            errors={errors.birthDate}
             dateFormat="dd/MM/yyyy"
             maxDate={new Date()}
           />
@@ -80,8 +78,6 @@ const Schedule = () => {
             label="Data e Hora do Agendamento:"
             selectedDate={scheduledDate}
             setSelectedDate={setScheduledDate}
-            isInvalid={!!errors.scheduledDate}
-            errors={errors.scheduledDate}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={60}
