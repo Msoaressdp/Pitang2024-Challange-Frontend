@@ -1,13 +1,10 @@
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Link } from 'react-router-dom';
 import { useModal } from '../context/ModalContext';
 import SubmissionModal from '../components/ModalComponent';
-import { appointmentSchema } from '../schema/appointmentSchema';
 import useFormState from '../hooks/useFormState';
 import DatePickerField from '../components/DatePickerField';
 import { storeAppointment } from '../services/api';
-import { Link } from 'react-router-dom';
 import {
   Button,
   FormControl,
@@ -19,24 +16,29 @@ import {
   Text
 } from '@chakra-ui/react';
 
-const Schedule = () => {
-  const { register, handleSubmit, control, formState: { errors }, setValue } = useForm({
-    resolver: zodResolver(appointmentSchema),
-    mode: 'onBlur',
-  });
-
-  const { name, setName, birthDate, setBirthDate, scheduledDate, setScheduledDate, resetForm } = useFormState(setValue);
+const Schedule: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    errors,
+    name,
+    setName,
+    birthDate,
+    setBirthDate,
+    scheduledDate,
+    setScheduledDate,
+    resetForm
+  } = useFormState();
 
   const { showModal } = useModal();
-  const [submittedData, setSubmittedData] = React.useState(null);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
       const response = await storeAppointment(data);
-      setSubmittedData(response.data);
-      resetForm();
       showModal('Agendamento criado com sucesso');
-    } catch (error) {
+      resetForm();
+    } catch (error: any) {
       const errorMessage = error?.response?.data?.message ?? 'Erro ao criar agendamento';
       showModal(errorMessage);
     }
@@ -47,7 +49,7 @@ const Schedule = () => {
       <Heading mb={8} mt={10}>Agendamento de Vacinas Covid-19</Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4} align="stretch">
-          <FormControl isInvalid={errors.name}>
+          <FormControl isInvalid={!!errors.name}>
             <FormLabel htmlFor="name">Nome:</FormLabel>
             <Input
               id="name"
@@ -55,7 +57,11 @@ const Schedule = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            {errors.name && <Text color="red.500">{errors.name.message}</Text>}
+            {errors.name && (
+              <Text color="red.500">
+                {(errors.name as any)?.message?.toString()}
+              </Text>
+            )}
           </FormControl>
 
           <DatePickerField
@@ -64,8 +70,6 @@ const Schedule = () => {
             label="Data de Nascimento:"
             selectedDate={birthDate}
             setSelectedDate={setBirthDate}
-            isInvalid={!!errors.birthDate}
-            errors={errors.birthDate}
             dateFormat="dd/MM/yyyy"
             maxDate={new Date()}
           />
@@ -76,8 +80,6 @@ const Schedule = () => {
             label="Data e Hora do Agendamento:"
             selectedDate={scheduledDate}
             setSelectedDate={setScheduledDate}
-            isInvalid={!!errors.scheduledDate}
-            errors={errors.scheduledDate}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={60}
@@ -91,15 +93,6 @@ const Schedule = () => {
           <Button mt={4} colorScheme="teal" type="submit">Submit</Button>
         </VStack>
       </form>
-
-      {submittedData && (
-        <Box mt={4} p={4} borderWidth="1px" borderRadius="lg">
-          <Heading as="h2" size="md">Submitted Data</Heading>
-          <Text><strong>Nome:</strong> {submittedData.name}</Text>
-          <Text><strong>Data de Nascimento:</strong> {submittedData.birthDate ? new Date(submittedData.birthDate).toLocaleDateString() : ''}</Text>
-          <Text><strong>Data e Hora do Agendamento:</strong> {submittedData.scheduledDate ? new Date(submittedData.scheduledDate).toLocaleString() : ''}</Text>
-        </Box>
-      )}
 
       <Box mt={4}>
         <Link to="/list">

@@ -10,8 +10,6 @@ interface DatePickerFieldProps extends Omit<ReactDatePickerProps, 'name'> {
   label: string;
   selectedDate: Date | null;
   setSelectedDate: (date: Date | null) => void;
-  isInvalid: boolean;
-  errors: { message?: string };
 }
 
 const DatePickerField: React.FC<DatePickerFieldProps> = ({
@@ -20,16 +18,14 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   label,
   selectedDate,
   setSelectedDate,
-  isInvalid,
-  errors,
   ...props
 }) => (
-  <FormControl isInvalid={isInvalid}>
-    <FormLabel htmlFor={name}>{label}</FormLabel>
-    <Controller
-      control={control}
-      name={name}
-      render={({ field }) => (
+  <Controller
+    control={control}
+    name={name}
+    render={({ field, fieldState: { error } }) => (
+      <FormControl isInvalid={!!error}>
+        <FormLabel htmlFor={name}>{label}</FormLabel>
         <DatePicker
           id={name}
           selected={selectedDate}
@@ -39,10 +35,10 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
           }}
           {...props}
         />
-      )}
-    />
-    {isInvalid && <Text color="red.500">{errors.message}</Text>}
-  </FormControl>
+        {error && <Text color="red.500">{error.message}</Text>}
+      </FormControl>
+    )}
+  />
 );
 
 export default DatePickerField;
