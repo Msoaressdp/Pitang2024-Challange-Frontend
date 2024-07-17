@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import useListState from '../hooks/useListState';
 import AppointmentGroup from '../components/AppointmentGroup';
 
-const AppointmentList = () => {
+const AppointmentList: React.FC = () => {
   const {
     appointments,
     editMode,
@@ -18,7 +18,7 @@ const AppointmentList = () => {
   } = useListState();
 
   const groupedAppointments = groupBy(appointments);
-  
+
   return (
     <Box maxW="720px" mx="auto" mt={40} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
       <Heading mb={8} mt={10}>Lista de Agendamentos</Heading>
