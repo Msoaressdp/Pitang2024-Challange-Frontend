@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "commonjs",
   "scripts": {
-    "tsc:init": "tsc --init",
     "dev": "vite",
     "test": "jest",
     "build": "vite build",
