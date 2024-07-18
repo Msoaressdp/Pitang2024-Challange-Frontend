@@ -22,7 +22,7 @@ const AppointmentList: React.FC = () => {
   return (
     <Box bg={useColorModeValue('#f5f5dc', 'gray.800')} minH="100vh" py={12}>
       <Box
-        maxW="720px"
+        maxW="780"
         mx="auto"
         mt={40}
         p={6}
@@ -36,9 +36,21 @@ const AppointmentList: React.FC = () => {
         <Heading mb={8} mt={10} textAlign="center">
           Lista de Agendamentos
         </Heading>
-        <Button as={Link} to="/schedule" colorScheme="blue" mb={8} borderRadius="full" py={6}>
-          Schedule
-        </Button>
+        <Box display="flex" justifyContent="center" mb={8}>
+          <Button
+            as={Link}
+            to="/schedule"
+            colorScheme="blue"
+            borderRadius="full"
+            py={6}
+            px={100}
+            fontSize="lg"
+            lineHeight="1.2"
+            textAlign="center"
+          >
+            Preencher Formulário
+          </Button>
+        </Box>
         {Object.entries(groupedAppointments).map(([date, appointments]) => (
           <AppointmentGroup 
             key={date}
