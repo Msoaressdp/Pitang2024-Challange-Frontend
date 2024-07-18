@@ -13,7 +13,12 @@ import {
   Box,
   Heading,
   VStack,
-  Text
+  Text,
+  Container,
+  Divider,
+  useColorModeValue,
+  Flex,
+  Stack
 } from '@chakra-ui/react';
 
 const Schedule: React.FC = () => {
@@ -45,63 +50,76 @@ const Schedule: React.FC = () => {
   };
 
   return (
-    <Box maxW="720px" mx="auto" mt={40} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
-      <Heading mb={8} mt={10}>Agendamento de Vacinas Covid-19</Heading>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing={4} align="stretch">
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel htmlFor="name">Nome:</FormLabel>
-            <Input
-              id="name"
-              {...register('name')}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+    <Container maxW="container.md" py={12}>
+      <Box
+        bg={useColorModeValue('white', 'gray.700')}
+        boxShadow="lg"
+        p={8}
+        borderRadius="lg"
+      >
+        <Heading mb={8} textAlign="center">Agendamento de Vacinas Covid-19</Heading>
+        <Divider mb={8} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <VStack spacing={6} align="stretch">
+            <FormControl isInvalid={!!errors.name}>
+              <FormLabel htmlFor="name">Nome:</FormLabel>
+              <Input
+                id="name"
+                {...register('name')}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Digite seu nome completo"
+                variant="filled"
+                size="lg"
+              />
+              {errors.name && (
+                <Text color="red.500" mt={2}>
+                  {(errors.name as any)?.message?.toString()}
+                </Text>
+              )}
+            </FormControl>
+
+            <DatePickerField
+              control={control}
+              name="birthDate"
+              label="Data de Nascimento:"
+              selectedDate={birthDate}
+              setSelectedDate={setBirthDate}
+              dateFormat="dd/MM/yyyy"
+              maxDate={new Date()}
             />
-            {errors.name && (
-              <Text color="red.500">
-                {(errors.name as any)?.message?.toString()}
-              </Text>
-            )}
-          </FormControl>
 
-          <DatePickerField
-            control={control}
-            name="birthDate"
-            label="Data de Nascimento:"
-            selectedDate={birthDate}
-            setSelectedDate={setBirthDate}
-            dateFormat="dd/MM/yyyy"
-            maxDate={new Date()}
-          />
+            <DatePickerField
+              control={control}
+              name="scheduledDate"
+              label="Data e Hora do Agendamento:"
+              selectedDate={scheduledDate}
+              setSelectedDate={setScheduledDate}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={60}
+              timeCaption="Hora"
+              dateFormat="dd/MM/yyyy HH:mm"
+              minDate={new Date()}
+              minTime={new Date(new Date().setHours(10, 0, 0, 0))}
+              maxTime={new Date(new Date().setHours(22, 0))}
+            />
 
-          <DatePickerField
-            control={control}
-            name="scheduledDate"
-            label="Data e Hora do Agendamento:"
-            selectedDate={scheduledDate}
-            setSelectedDate={setScheduledDate}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={60}
-            timeCaption="Hora"
-            dateFormat="dd/MM/yyyy HH:mm"
-            minDate={new Date()}
-            minTime={new Date(new Date().setHours(10, 0, 0, 0))}
-            maxTime={new Date(new Date().setHours(22, 0))}
-          />
+            <Button mt={4} colorScheme="teal" type="submit" size="lg" width="full">
+              Agendar
+            </Button>
+          </VStack>
+        </form>
 
-          <Button mt={4} colorScheme="teal" type="submit">Submit</Button>
-        </VStack>
-      </form>
+        <Box mt={8} textAlign="center">
+          <Link to="/list">
+            <Button colorScheme="blue" size="lg">Ver Agendamentos</Button>
+          </Link>
+        </Box>
 
-      <Box mt={4}>
-        <Link to="/list">
-          <Button colorScheme="blue">Ver Agendamentos</Button>
-        </Link>
+        <SubmissionModal />
       </Box>
-
-      <SubmissionModal />
-    </Box>
+    </Container>
   );
 };
 
