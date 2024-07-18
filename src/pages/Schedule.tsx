@@ -17,6 +17,7 @@ import {
   Container,
   Divider,
   useColorModeValue,
+  HStack,
 } from '@chakra-ui/react';
 
 const Schedule: React.FC = () => {
@@ -48,7 +49,7 @@ const Schedule: React.FC = () => {
   };
 
   return (
-    <Container maxW="container.md" py={12}>
+    <Container maxW="container.lg" py={12}>
       <Box
         bg={useColorModeValue('white', 'gray.700')}
         boxShadow="lg"
@@ -58,7 +59,7 @@ const Schedule: React.FC = () => {
         <Heading mb={8} textAlign="center">Agendamento de Vacinas Covid-19</Heading>
         <Divider mb={8} />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <VStack spacing={6} align="stretch">
+          <VStack spacing={8} align="stretch">
             <FormControl isInvalid={!!errors.name}>
               <FormLabel htmlFor="name">Nome:</FormLabel>
               <Input
@@ -104,27 +105,31 @@ const Schedule: React.FC = () => {
               maxTime={new Date(new Date().setHours(22, 0))}
             />
 
-            <Button
-              mt={4}
-              colorScheme="teal"
-              type="submit"
-              size="lg"
-              width="full"
-              borderRadius="full"
-              py={6}
-            >
-              Agendar
-            </Button>
+            <HStack spacing={4} mt={4}>
+              <Button
+                colorScheme="teal"
+                type="submit"
+                size="lg"
+                flex="1"
+                borderRadius="full"
+                py={6}
+              >
+                Agendar
+              </Button>
+              <Link to="/list">
+                <Button
+                  colorScheme="blue"
+                  size="lg"
+                  flex="1"
+                  borderRadius="full"
+                  py={6}
+                >
+                  Ver Agendamentos
+                </Button>
+              </Link>
+            </HStack>
           </VStack>
         </form>
-
-        <Box mt={8} textAlign="center">
-          <Link to="/list">
-            <Button colorScheme="blue" size="lg" borderRadius="full" py={6}>
-              Ver Agendamentos
-            </Button>
-          </Link>
-        </Box>
 
         <SubmissionModal />
       </Box>
