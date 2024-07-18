@@ -17,8 +17,6 @@ import {
   Container,
   Divider,
   useColorModeValue,
-  Flex,
-  Stack
 } from '@chakra-ui/react';
 
 const Schedule: React.FC = () => {
@@ -71,6 +69,7 @@ const Schedule: React.FC = () => {
                 placeholder="Digite seu nome completo"
                 variant="filled"
                 size="lg"
+                borderRadius="full"
               />
               {errors.name && (
                 <Text color="red.500" mt={2}>
@@ -105,7 +104,15 @@ const Schedule: React.FC = () => {
               maxTime={new Date(new Date().setHours(22, 0))}
             />
 
-            <Button mt={4} colorScheme="teal" type="submit" size="lg" width="full">
+            <Button
+              mt={4}
+              colorScheme="teal"
+              type="submit"
+              size="lg"
+              width="full"
+              borderRadius="full"
+              py={6}
+            >
               Agendar
             </Button>
           </VStack>
@@ -113,7 +120,9 @@ const Schedule: React.FC = () => {
 
         <Box mt={8} textAlign="center">
           <Link to="/list">
-            <Button colorScheme="blue" size="lg">Ver Agendamentos</Button>
+            <Button colorScheme="blue" size="lg" borderRadius="full" py={6}>
+              Ver Agendamentos
+            </Button>
           </Link>
         </Box>
 
