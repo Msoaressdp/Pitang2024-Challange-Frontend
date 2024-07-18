@@ -5,6 +5,7 @@ import SubmissionModal from '../components/ModalComponent';
 import useFormState from '../hooks/useFormState';
 import DatePickerField from '../components/DatePickerField';
 import { storeAppointment } from '../services/api';
+import { TimeIcon } from '@chakra-ui/icons';
 import {
   Button,
   FormControl,
@@ -18,6 +19,7 @@ import {
   Divider,
   useColorModeValue,
   HStack,
+  Icon,
 } from '@chakra-ui/react';
 
 const Schedule: React.FC = () => {
@@ -56,7 +58,10 @@ const Schedule: React.FC = () => {
         p={8}
         borderRadius="lg"
       >
-        <Heading mb={8} textAlign="center">Agendamento de Vacinas Covid-19</Heading>
+        <HStack justify="center" mb={8}>
+          <Heading textAlign="center">Agendamento de Vacinas Covid-19</Heading>
+          <Icon as={TimeIcon} boxSize={8} color="black" />
+        </HStack>
         <Divider mb={8} />
         <form onSubmit={handleSubmit(onSubmit)}>
           <VStack spacing={8} align="stretch">
