@@ -27,7 +27,7 @@ describe('DatePickerField', () => {
     );
 
     expect(screen.getByLabelText(/test date/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/select date/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/selecione uma data/i)).toBeInTheDocument();
   });
 
   it('updates the selected date when a date is picked', async () => {
@@ -41,7 +41,7 @@ describe('DatePickerField', () => {
       />
     );
 
-    fireEvent.click(screen.getByPlaceholderText(/select date/i));
+    fireEvent.click(screen.getByPlaceholderText(/selecione uma data/i));
     const today = new Date();
     const dayToSelect = today.getDate().toString();
     
