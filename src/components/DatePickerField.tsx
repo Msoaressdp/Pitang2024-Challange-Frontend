@@ -30,7 +30,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   selectedDate,
   setSelectedDate,
   dateFormat = "MM/dd/yyyy",
-  placeholderText = "Select date",
+  placeholderText = "Selecione uma data",
   isClearable = true,
   maxDate,
   showTimeSelect = false,

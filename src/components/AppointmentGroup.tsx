@@ -1,7 +1,12 @@
 import React from 'react';
-import { Box, Heading, VStack } from '@chakra-ui/react';
 import AppointmentItem from './AppointmentItem';
 import { AppointmentGroupProps } from '../interfaces/index';
+import { 
+  Box, 
+  Heading, 
+  VStack, 
+  useColorModeValue 
+} from '@chakra-ui/react';
 
 const AppointmentGroup: React.FC<AppointmentGroupProps> = ({
   date,
@@ -14,7 +19,13 @@ const AppointmentGroup: React.FC<AppointmentGroupProps> = ({
   onConclusionChange,
   onDeleteClick
 }) => (
-  <Box mt={4} p={4} borderWidth="1px" borderRadius="lg">
+  <Box 
+    mt={4} 
+    p={4} 
+    borderRadius="lg"
+    border="2px"
+    borderColor="black"
+    bg={useColorModeValue('#f5f5dc', 'gray.800')}>
     <Heading as="h3" size="md">{date}</Heading>
     <VStack spacing={4} align="stretch">
       {appointments.map(appointment => (

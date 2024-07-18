@@ -5,6 +5,7 @@ import SubmissionModal from '../components/ModalComponent';
 import useFormState from '../hooks/useFormState';
 import DatePickerField from '../components/DatePickerField';
 import { storeAppointment } from '../services/api';
+import { TimeIcon } from '@chakra-ui/icons';
 import {
   Button,
   FormControl,
@@ -13,7 +14,12 @@ import {
   Box,
   Heading,
   VStack,
-  Text
+  Text,
+  Container,
+  Divider,
+  useColorModeValue,
+  HStack,
+  Icon,
 } from '@chakra-ui/react';
 
 const Schedule: React.FC = () => {
@@ -45,62 +51,97 @@ const Schedule: React.FC = () => {
   };
 
   return (
-    <Box maxW="720px" mx="auto" mt={40} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
-      <Heading mb={8} mt={10}>Agendamento de Vacinas Covid-19</Heading>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing={4} align="stretch">
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel htmlFor="name">Nome:</FormLabel>
-            <Input
-              id="name"
-              {...register('name')}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            {errors.name && (
-              <Text color="red.500">
-                {(errors.name as any)?.message?.toString()}
-              </Text>
-            )}
-          </FormControl>
+    <Box bg={useColorModeValue('#f5f5dc', 'gray.800')} minH="100vh" py={12}>
+      <Container maxW="container.lg">
+        <Box
+          bg={useColorModeValue('#e5e5c0', 'gray.700')}
+          boxShadow="lg"
+          p={8}
+          borderRadius="lg"
+          border="2px"
+          borderColor="black"
+        >
+          <HStack justify="center" mb={8}>
+            <Heading textAlign="center">Agendamento de Vacinas Covid-19</Heading>
+            <Icon as={TimeIcon} boxSize={8} color="black" />
+          </HStack>
+          <Divider mb={8} />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack spacing={8} align="stretch">
+              <FormControl isInvalid={!!errors.name}>
+                <FormLabel htmlFor="name">Nome:</FormLabel>
+                <Input
+                  id="name"
+                  {...register('name')}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Digite seu nome completo"
+                  variant="filled"
+                  size="lg"
+                  borderRadius="full"
+                />
+                {errors.name && (
+                  <Text color="red.500" mt={2}>
+                    {(errors.name as any)?.message?.toString()}
+                  </Text>
+                )}
+              </FormControl>
 
-          <DatePickerField
-            control={control}
-            name="birthDate"
-            label="Data de Nascimento:"
-            selectedDate={birthDate}
-            setSelectedDate={setBirthDate}
-            dateFormat="dd/MM/yyyy"
-            maxDate={new Date()}
-          />
+              <DatePickerField
+                control={control}
+                name="birthDate"
+                label="Data de Nascimento:"
+                selectedDate={birthDate}
+                setSelectedDate={setBirthDate}
+                dateFormat="dd/MM/yyyy"
+                maxDate={new Date()}
+              />
 
-          <DatePickerField
-            control={control}
-            name="scheduledDate"
-            label="Data e Hora do Agendamento:"
-            selectedDate={scheduledDate}
-            setSelectedDate={setScheduledDate}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={60}
-            timeCaption="Hora"
-            dateFormat="dd/MM/yyyy HH:mm"
-            minDate={new Date()}
-            minTime={new Date(new Date().setHours(10, 0, 0, 0))}
-            maxTime={new Date(new Date().setHours(22, 0))}
-          />
+              <DatePickerField
+                control={control}
+                name="scheduledDate"
+                label="Data e Hora do Agendamento:"
+                selectedDate={scheduledDate}
+                setSelectedDate={setScheduledDate}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={60}
+                timeCaption="Hora"
+                dateFormat="dd/MM/yyyy HH:mm"
+                minDate={new Date()}
+                minTime={new Date(new Date().setHours(10, 0, 0, 0))}
+                maxTime={new Date(new Date().setHours(22, 0))}
+              />
 
-          <Button mt={4} colorScheme="teal" type="submit">Submit</Button>
-        </VStack>
-      </form>
+              <HStack spacing={4} mt={4}>
+                <Button
+                  colorScheme="teal"
+                  type="submit"
+                  size="lg"
+                  flex="1"
+                  borderRadius="full"
+                  py={6}
+                >
+                  Agendar
+                </Button>
+                <Link to="/list">
+                  <Button
+                    colorScheme="blue"
+                    size="lg"
+                    flex="1"
+                    borderRadius="full"
+                    py={6}
+                  >
+                    Ver Agendamentos
+                  </Button>
+                </Link>
+              </HStack>
+            </VStack>
+          </form>
 
-      <Box mt={4}>
-        <Link to="/list">
-          <Button colorScheme="blue">Ver Agendamentos</Button>
-        </Link>
-      </Box>
-
-      <SubmissionModal />
+          <SubmissionModal />
+        </Box>
+      </Container>
     </Box>
   );
 };

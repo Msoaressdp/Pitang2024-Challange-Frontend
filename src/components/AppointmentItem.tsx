@@ -1,6 +1,13 @@
 import React from 'react';
-import { Box, Text, Checkbox, Button, Input } from '@chakra-ui/react';
 import { AppointmentItemProps } from '../interfaces/index';
+import { 
+  Box, 
+  Text, 
+  Checkbox, 
+  Button, 
+  Input,
+  useColorModeValue
+} from '@chakra-ui/react';
 
 const AppointmentItem: React.FC<AppointmentItemProps> = ({
   appointment,
@@ -12,7 +19,8 @@ const AppointmentItem: React.FC<AppointmentItemProps> = ({
   onConclusionChange,
   onDeleteClick
 }) => (
-  <Box p={4} borderWidth="1px" borderRadius="lg">
+  <Box p={4} bg={useColorModeValue('#f5f5dc', 'gray.800')}
+  >
     <Text><strong>Nome:</strong> {appointment.name}</Text>
     <Text><strong>Data de Nascimento:</strong> {new Date(appointment.birthDate).toLocaleDateString()}</Text>
     <Text><strong>Data e Hora do Agendamento:</strong> {new Date(appointment.scheduledDate).toLocaleString()}</Text>
