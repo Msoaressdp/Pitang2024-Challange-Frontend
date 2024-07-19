@@ -98,4 +98,55 @@ describe('Schedule Page', () => {
       expect(scheduledDateInput.value).toBe('21/08/2024 11:00');
     }
   });
+
+  it('should show error if name field is empty', async () => {
+    renderWithProviders(<Schedule />);
+
+    fireEvent.change(screen.getByLabelText('Data de Nascimento:'), { target: { value: '01/12/1998' } });
+    fireEvent.change(screen.getByLabelText('Data e Hora do Agendamento:'), { target: { value: '21/08/2024 11:00' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /agendar/i }));
+
+    await waitFor(() => {
+      screen.getByText('Nome é obrigatório');
+    });
+  });
+
+  it('should show error if birth date field is empty', async () => {
+    renderWithProviders(<Schedule />);
+
+    fireEvent.change(screen.getByLabelText('Nome:'), { target: { value: 'Matheus Soares da Silva Dantas Pereira' } });
+    fireEvent.change(screen.getByLabelText('Data e Hora do Agendamento:'), { target: { value: '21/08/2024 11:00' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /agendar/i }));
+
+    await waitFor(() => {
+      screen.getByText('Data de Nascimento é obrigatória');
+    });
+  });
+
+  it('should show error if scheduled date field is empty', async () => {
+    renderWithProviders(<Schedule />);
+
+    fireEvent.change(screen.getByLabelText('Nome:'), { target: { value: 'Matheus Soares da Silva Dantas Pereira' } });
+    fireEvent.change(screen.getByLabelText('Data de Nascimento:'), { target: { value: '01/12/1998' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /agendar/i }));
+
+    await waitFor(() => {
+      screen.getByText('Data e Hora do Agendamento são obrigatórias');
+    });
+  });
+
+  it('should show errors if all fields are empty', async () => {
+    renderWithProviders(<Schedule />);
+
+    fireEvent.click(screen.getByRole('button', { name: /agendar/i }));
+
+    await waitFor(() => {
+      screen.getByText('Nome é obrigatório');
+      screen.getByText('Data de Nascimento é obrigatória');
+      screen.getByText('Data e Hora do Agendamento são obrigatórias');
+    });
+  });
 });
